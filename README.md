@@ -1,2 +1,2 @@
-# mongo-remote-backup
-Remote Mongo DB backup on Google Drive
+# mongogbackup
+Secure Mongo DB backups on Google Drive
