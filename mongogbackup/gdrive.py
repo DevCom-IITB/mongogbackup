@@ -3,20 +3,24 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
+#this implementation overwrites the previous file in the parent folder
 class GoogleDriveHandler:
   def __init__(self, credentials_file):
     self.credentials = service_account.Credentials.from_service_account_file(credentials_file, scopes=['https://www.googleapis.com/auth/drive'])
     self.drive_service = build('drive', 'v3', credentials=self.credentials)
 
   def upload_to_drive(self, file_name, parent_id):
-    file_metadata = {
-      'name': file_name,
-    }
+    # file_metadata = {
+    #   'name': file_name,
+    # }
     media = MediaFileUpload(file_name, mimetype='application/gzip')
     existing_file = self.find_existing_file(parent_id)
 
     try:
       if existing_file:
+        file_metadata = {
+          'name': file_name,
+        }
         file = self.drive_service.files().update(
           fileId=existing_file['id'],
           body=file_metadata,
@@ -26,6 +30,10 @@ class GoogleDriveHandler:
         print(f'File updated successfully! File Id: {file.get("id")}')
 
       else:
+        file_metadata = {
+          'name': file_name,
+          'parents': [parent_id]
+        }
         file = self.drive_service.files().create(
             body=file_metadata,
             media_body=media,
@@ -44,7 +52,7 @@ class GoogleDriveHandler:
 
 if __name__ == "__main__":
   credentials_file = 'mongogbackup/credentials.json' 
-  parent_id = 'XXXXX' # Folder ID
+  parent_id = 'XXXXX' # Replace with your desired target folder ID
   gdrive = GoogleDriveHandler(credentials_file)
   gdrive.upload_to_drive('mongogbackup/backup.zip', parent_id)
 
