@@ -1,5 +1,6 @@
 from hashlib import sha256
 import datetime
+from cryptography.fernet import Fernet
 
 class HashVerifier:
     """Generates and verifies sha-256 checksums for files."""
@@ -55,6 +56,52 @@ class HashVerifier:
         with open(file_name, 'w') as f:
             f.writelines(file_output)
         
-class Encryptor:
-    def __init__(self):
-        pass
+class FileEncryptor:
+    """Encrypts and decrypts files using Fernet symmetric encryption."""
+    
+    def __init__(self, generate_key=False, key:str = None):
+        """Initializes the Encryptor class."""
+        
+        if(not generate_key and key is None):
+            raise ValueError("Either provide a key or generate_key must be set to True.")
+        
+        self._FERNET_KEY = Fernet.generate_key() + str(datetime.datetime.now().timestamp()).encode() if generate_key  else key
+    
+    def get_key(self):
+        """Returns the encryption key."""
+        return self._FERNET_KEY
+    
+    def encrypt_file(self, source_file_path:str, encrypted_file_path:str):
+        """Encrypts a file using Fernet symmetric encryption."""
+       
+        # Create a Fernet Instance
+        key = self._FERNET_KEY 
+        f = Fernet(key)
+        
+        # Encrypt the file
+        with open(source_file_path, 'rb') as file:
+            data = file.read()
+        encrypted = f.encrypt(data)
+        
+        # Write the encrypted file
+        with open(encrypted_file_path, 'wb') as file:
+            file.write(encrypted)
+        
+        return encrypted_file_path
+        
+    def decrypt_file(self, encrypted_file_path, decrypted_file_path):
+        """Decrypts a file using Fernet symmetric encryption."""
+        
+        # Create a Fernet Instance
+        key = self._FERNET_KEY
+        fernet = Fernet(key)
+        
+        # Decrypt the file
+        with open(encrypted_file_path, 'rb') as enc_file:
+            encrypted = enc_file.read()
+        decrypted = fernet.decrypt(encrypted)
+        
+        # Write the decrypted file
+        with open(decrypted_file_path, 'wb') as dec_file:
+            dec_file.write(decrypted)
+        return decrypted_file_path
