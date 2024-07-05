@@ -1,59 +1,59 @@
-import os
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaFileUpload, MediaIoBaseUpload
+import io
 
-#this implementation overwrites the previous file in the parent folder
+# this implementation overwrites any previous files with the same name in the target folder
 class GoogleDriveHandler:
-  def __init__(self, credentials_file):
-    self.credentials = service_account.Credentials.from_service_account_file(credentials_file, scopes=['https://www.googleapis.com/auth/drive'])
-    self.drive_service = build('drive', 'v3', credentials=self.credentials)
+    def __init__(self, credentials_file):
+        self.credentials = service_account.Credentials.from_service_account_file(credentials_file, scopes=['https://www.googleapis.com/auth/drive'])
+        self.drive_service = build('drive', 'v3', credentials=self.credentials)
 
-  def upload_to_drive(self, file_name, parent_id):
-    # file_metadata = {
-    #   'name': file_name,
-    # }
-    media = MediaFileUpload(file_name, mimetype='application/gzip')
-    existing_file = self.find_existing_file(parent_id)
+    def find_existing_file(self, file_name, parent_id):
+        query = f"name='{file_name}' and '{parent_id}' in parents and trashed=false"
+        response = self.drive_service.files().list(q=query, fields='files(id, name)').execute()
+        files = response.get('files', [])
+        print(f'Existing files: {files}')
+        return files[0] if files else None
+    
+    def upload_to_drive(self, file_name, parent_id):
+        media = MediaFileUpload(file_name, mimetype='application/gzip', resumable=True)
+        existing_file = self.find_existing_file(file_name, parent_id)
 
-    try:
-      if existing_file:
-        file_metadata = {
-          'name': file_name,
-        }
-        file = self.drive_service.files().update(
-          fileId=existing_file['id'],
-          body=file_metadata,
-          media_body=media,
-          fields='id'
-        ).execute()
-        print(f'File updated successfully! File Id: {file.get("id")}')
+        try:
+            if existing_file:
+                file_metadata = {
+                    'name': file_name,
+                }
+                request = self.drive_service.files().update(
+                    fileId=existing_file['id'],
+                    body=file_metadata,
+                    media_body=media,
+                    fields='id'
+                )
+            else:
+                file_metadata = {
+                    'name': file_name,
+                    'parents': [parent_id]
+                }
+                request = self.drive_service.files().create(
+                    body=file_metadata,
+                    media_body=media,
+                    fields='id'
+                )
+            response = None
+            while response is None:
+                status, response = request.next_chunk()
+                if status:
+                    print(f"Uploaded {int(status.progress() * 100)}%")
+            print(f"File uploaded successfully! File Id: {response.get('id')}")
 
-      else:
-        file_metadata = {
-          'name': file_name,
-          'parents': [parent_id]
-        }
-        file = self.drive_service.files().create(
-            body=file_metadata,
-            media_body=media,
-            fields='id'
-        ).execute()
-        print(f'File uploaded successfully! File Id: {file.get("id")}')
+        except Exception as e:
+            print(f'Unable to upload file, error: {e}')
 
-    except Exception as e:
-      print(f'Unable to upload file, error: {e}')
-  
-  def find_existing_file(self, parent_id):
-    response = self.drive_service.files().list(q=f"'{parent_id}' in parents and trashed=false", fields='files(id, name)').execute()
-    files = response.get('files', [])
-    print(f'Existing files: {files}')
-    return files[0] if files else None
 
 if __name__ == "__main__":
-  credentials_file = 'mongogbackup/credentials.json' 
-  parent_id = 'XXXXX' # Replace with your desired target folder ID
-  gdrive = GoogleDriveHandler(credentials_file)
-  gdrive.upload_to_drive('mongogbackup/backup.zip', parent_id)
-
-#TODO: resumable uploads
+    credentials_file = 'mongogbackup/credentials.json'
+    parent_id = 'XXXXX'  # Replace with your desired target folder ID
+    gdrive = GoogleDriveHandler(credentials_file)
+    gdrive.upload_to_drive('mongogbackup/backup.zip', parent_id)
