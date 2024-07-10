@@ -1,80 +1,110 @@
-import subprocess, os, sys
+from hashlib import sha256
+import datetime
+from cryptography.fernet import Fernet
 
-class MongoBackupHandler:
-    """Handles backup and restore operations for MongoDB databases."""
-    def __init__(self, db_name,host='localhost', port=27017, username=None, passwword=None, auth_db=None):
+class HashVerifier:
+    """Generates and verifies sha-256 checksums for files."""
+        
+    def __init__(self):
+        """Initializes the HashVerifier class."""
+        self._BUF_SIZE: int = 65336 # 64Kb
+        self._last_hash: str = None
+        self._last_hash_time:datetime.datetime = None
+        
+    def __str__(self) -> str:
+        return self._last_hash
+    
+    def last_hash(self) -> dict:
+        """Last generated hash and the generation time.
+        
+        Returns:
+            dict -- A dictionary containing the hash and the time it was generated
+            {"hash":str, "time":datetime.datetime}.
+            """
+        return {"hash": self._last_hash, "time": self._last_hash_time}
+    
+    def settings(self, buf_size: int = None) -> None:
+        """Settings for the HashVerifier class.
+
+        Keword Arguments:
+            buf_size -- The buffer size to use when reading the file. Default is 64Kb.
         """
-        Initializes the MongoBackupHandler object with database details and checks if mongodump and mongorestore are installed and added to PATH.
+        self._BUF_SIZE = buf_size if buf_size is not None else self._BUF_SIZE
 
-        Parameters:-
-        db_name[type:String]- Name of the database to be backedup/restored. 
-        host[type:String]- MongoDb host address. Defaults to 'localhost'. 
-        port[type:int]- MongoDb port number. Defaults to 27017. 
-        username[type:String]- (Optional) MongoDb username for user authentication.
-        password[type:String]- (Optional but required if username is mentioned) MongoDb password for user authentication.
-        auth_db[type:String]- (Optional but required if username is mentioned) MongoDB database to authenticate the user details.
+    def generate_file_hash(self, file_path: str) -> str:
+        """Generates and caches SHA-256 checksum for a file."""
+        sha = sha256()
+        with open(file_path, 'rb') as f:
+            while True:
+                data = f.read(self._BUF_SIZE)
+                if not data:
+                    break
+                sha.update(data)
+        self._last_hash = sha.hexdigest()
+        self._last_hash_time = datetime.datetime.now()
+        return self._last_hash
+    
+    def compare_generated(self, hash: str) -> bool:
+        """Compares input hash with the last generated hash."""
+        return hash == self._last_hash
+    
+    def save(self, file_name: str = "hash.txt"):
+        """Saves the last generated hash to a file."""
+        file_output =[  
+                      "MongoGBackup File Hash\n",
+                      "--------------------------------------\n",
+                      "SHA256 Checksum: " + self._last_hash+"\n",
+                      "Generated at: " + str(self._last_hash_time)+" (local)",
+                      ]
+        with open(file_name, 'w') as f:
+            f.writelines(file_output)
         
-        """
-        command =[ 'mongodump', '--version']
-        result= subprocess.run(command, capture_output=True, text=True)
-        if result.returncode != 0:  
-            print("Error: mongodump not found. Please install MongoDB on your system and add it to your PATH.")
-            exit(1)
-        command= [ 'mongorestore', '--version']
-        result= subprocess.run(command, capture_output=True, text=True)
-        if result.returncode!=0 :
-            print("Error: mongorestore not found. Please install MongoDB on your system and add it to your PATH.")
-            exit(1)
+class FileEncryptor:
+    """Encrypts and decrypts files using Fernet symmetric encryption."""
+    
+    def __init__(self, generate_key=False, key:str = None):
+        """Initializes the Encryptor class."""
         
-        self.db_name=db_name
-        self.host=host
-        self.port=port
-
-        #if user authentication is required to access the database:
-        self.username=username
-        self.password=passwword
-        self.auth_db=auth_db
+        if(not generate_key and key is None):
+            raise ValueError("Either provide a key or generate_key must be set to True.")
         
-    def backup(self, dir):
-        """Performs a backup of the specified MongoDB database and saves it to the specified directory(dir)."""
-        formatted_dir = dir.replace("\\", "/")
-        os.makedirs(formatted_dir, exist_ok=True)
+        self._FERNET_KEY = Fernet.generate_key() if generate_key  else key
+    
+    def get_key(self) ->str:
+        """Returns the encryption key."""
+        return self._FERNET_KEY
+    
+    def encrypt_file(self, source_file_path:str, encrypted_file_path:str) -> str:
+        """Encrypts a file using Fernet symmetric encryption."""
+       
+        # Create a Fernet Instance
+        key = self._FERNET_KEY 
+        f = Fernet(key)
         
-        command = ['mongodump', '--host', self.host, '--port', str(self.port), '--db', self.db_name, '--out', formatted_dir]
-
-        if self.username and self.password and self.auth_db:
-            command.extend(['--username', self.username, '--password', self.password, '--authenticationDatabase', self.auth_db])
-
-        print("Executing command:", " ".join(command))  #for testing purposes
-        result=subprocess.run(command, capture_output=True,text=True)
-        if result.returncode == 0:
-            print(f"Backup successful; added to: {formatted_dir}")
-        else:
-            print(f"Backup failed with error: {result.stderr}")
-
-    def restore(self,bck_dir):
-        """Restore the specified MongoDB database from the backupfiles from the specified directory(bck_dir)."""
+        # Encrypt the file
+        with open(source_file_path, 'rb') as file:
+            data = file.read()
+        encrypted = f.encrypt(data)
         
-        formatted_bck_dir = bck_dir.replace("\\", "/")
-        if not os.path.exists(formatted_bck_dir):
-            print(f"Error: The specified directory {bck_dir} does not exist.")
-            
-        command= ['mongorestore', '--host', self.host, '--port', str(self.port), '--db', self.db_name, formatted_bck_dir]
+        # Write the encrypted file
+        with open(encrypted_file_path, 'wb') as file:
+            file.write(encrypted)
         
-        if self.username and self.password and self.auth_db:
-            command.extend(['--username', self.username, '--password', self.password, '--authenticationDatabase', self.auth_db])
+        return encrypted_file_path
         
-        print("Executing command:", " ".join(command))  #for testing purposes
-        result= subprocess.run(command, capture_output= True, text=True)
+    def decrypt_file(self, encrypted_file_path, decrypted_file_path) -> str:
+        """Decrypts a file using Fernet symmetric encryption."""
         
-        if result.returncode == 0:
-            print(f"Restore succesful; restored from: {bck_dir}")
-        else:
-            print(f"Restore failed with error: {result.stderr}")
-
-#testing the class
-#if __name__ == '__main__':
-#    backup_handler = MongoBackupHandler(db_name='flask_database')
-#    #use double backslashes in windows paths as python interprets single backlashes as end of string sequence or use raw string
-#    backup_handler.backup("C:\\Users\\kani1\\Downloads\\test")
-#    backup_handler.restore("C:\\Users\\kani1\\Downloads\\test")
+        # Create a Fernet Instance
+        key = self._FERNET_KEY
+        fernet = Fernet(key)
+        
+        # Decrypt the file
+        with open(encrypted_file_path, 'rb') as enc_file:
+            encrypted = enc_file.read()
+        decrypted = fernet.decrypt(encrypted)
+        
+        # Write the decrypted file
+        with open(decrypted_file_path, 'wb') as dec_file:
+            dec_file.write(decrypted)
+        return decrypted_file_path
