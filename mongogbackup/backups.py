@@ -40,9 +40,9 @@ class MongoBackupHandler:
 
     def __init__(
         self,
-        db_name:str,
-        host:str='localhost', 
-        port:int=27017,
+        db_name:list[str],
+        host:list[str]=None, 
+        port:list[int]=None,
         username:str=None,
         password:str=None, 
         auth_db:str='Admin'
@@ -51,9 +51,9 @@ class MongoBackupHandler:
         checks if mongodump and mongorestore are installed and added to PATH.
 
         Parameters:
-            db_name [type:String] -- Name of the database to be backedup/restored. 
-            host [type:String] -- MongoDb host address. Defaults to 'localhost'. 
-            port [type:int] -- MongoDb port number. Defaults to 27017. 
+            db_name [type:List of Strings] -- Name of the databases to be backedup/restored. 
+            host [type:List of String] -- MongoDb host addressess. Defaults to a list of 'localhost'. 
+            port [type:List of int] -- MongoDb port numbers. Defaults to a list of 27017. 
             username [type:String] -- (Optional) MongoDb username for user authentication.
             password [type:String] -- (Optional but required if username is mentioned) MongoDb password for user authentication.
             auth_db [type:String] -- (Optional but required if username is mentioned) MongoDB database to authenticate the user details."""
@@ -67,6 +67,12 @@ class MongoBackupHandler:
         self.host=host
         self.port=port
 
+        num_db=len(self.db_name)
+        self.num_db=num_db
+        if self.host == None:
+            self.host=['localhost']*num_db
+        if self.port == None:
+            self.port=[27017]*num_db
         # if user authentication is required to access the database:
         self.username=username
         self.password=password
@@ -94,8 +100,9 @@ class MongoBackupHandler:
         """Checks if the connection to the database is succesful or not. Also checks if the password provided is correct or not."""
         if self.username and self.password == None:
             try:
-                client= MongoClient(host=self.host,port=self.port)
-                client.admin.command('listDatabases')
+                for i in range(self.db_num):
+                    client= MongoClient(host=self.host[i],port=self.port[i])
+                    client.admin.command('listDatabases')
 
             except ConnectionFailure:
                 raise MongoConnectionError()
@@ -105,11 +112,12 @@ class MongoBackupHandler:
                 client.close()
         else:
             try:
-                client= MongoClient(host=self.host, port=self.port,
+                for i in range(self.num_db):
+                    client= MongoClient(host=self.host[i], port=self.port[i],
                                     username=self.username,
                                     password=self.password,
                                     authSource=self.auth_db)
-                client.admin.command('listDatabases')
+                    client.admin.command('listDatabases')
             except OperationFailure:
                 raise MongoAdminError(2)
             finally:
@@ -128,28 +136,33 @@ class MongoBackupHandler:
         check_dir= self.check_directory(formatted_dir)
         if not check_dir:
             raise DirectoryNotFoundError(dir)
+        for i in range(self.num_db):
+            db_name=self.db_name[i]
+            host=self.host[i]
+            port=self.port[i]
+            command = [
+                'mongodump', 
+                '--host', host, 
+                '--port', str(port), 
+                '--db', db_name, 
+                '--out', formatted_dir
+                ]
 
-        command = [
-            'mongodump', 
-            '--host', self.host, 
-            '--port', str(self.port), 
-            '--db', self.db_name, 
-            '--out', formatted_dir
-            ]
+            if self.username and self.password :
+                command.extend([
+                    '--username', self.username, 
+                    '--password', self.password, 
+                    '--authenticationDatabase', self.auth_db
+                    ])
 
-        if self.username and self.password :
-            command.extend([
-                '--username', self.username, 
-                '--password', self.password, 
-                '--authenticationDatabase', self.auth_db
-                ])
-
-        print("Executing command:", " ".join(command))  #for testing purposes
-        result=subprocess.run(command, capture_output=True,text=True)
-        if result.returncode == 0:
-            print(f"Backup successful; added to: {formatted_dir}")
-            return
-        raise UnexpectedError(result.stderr)
+            print("Executing command:", " ".join(command))  #for testing purposes
+            result=subprocess.run(command, capture_output=True,text=True)
+            if result.returncode == 0:
+                print(f"Database {db_name} successfully backed up to: {formatted_dir}  {i+1} out of {self.num_db} complete. ")
+                continue
+            raise UnexpectedError(result.stderr)
+        print("Backup complete.")
+        return
         
 
     def restore(self,bck_dir:str) -> None:
@@ -160,25 +173,31 @@ class MongoBackupHandler:
         if not check_dir:
             raise DirectoryNotFoundError(dir)
         
-        command= [
-            'mongorestore', 
-            '--host', self.host, 
-            '--port', str(self.port), 
-            '--db', self.db_name, 
-            formatted_bck_dir
-            ]
+        for i in range(self.num_db):
+            host=self.host[i]
+            port=self.port[i]
+            db_name=self.db_name[i]
+            command= [
+                'mongorestore', 
+                '--host', host, 
+                '--port', str(port), 
+                '--db', db_name, 
+                formatted_bck_dir
+                ]
         
-        if self.username and self.password:
-            command.extend([
-                '--username', self.username, 
-                '--password', self.password, 
-                '--authenticationDatabase', self.auth_db
-                ])
+            if self.username and self.password:
+                command.extend([
+                    '--username', self.username, 
+                    '--password', self.password, 
+                    '--authenticationDatabase', self.auth_db
+                    ])
         
-        print("Executing command:", " ".join(command))  #for testing purposes
-        result= subprocess.run(command, capture_output= True, text=True)
+            print("Executing command:", " ".join(command))  #for testing purposes
+            result= subprocess.run(command, capture_output= True, text=True)
         
-        if result.returncode == 0:
-            print(f"Restore succesful; restored from: {bck_dir}")
-            return 
-        raise UnexpectedError(result.stderr)
+            if result.returncode == 0:
+                print(f"Restored database {db_name} from {formatted_bck_dir}  {i+1} out of {self.num_db} complete.")
+                continue 
+            raise UnexpectedError(result.stderr)
+        print("Restore complete.")
+        return
