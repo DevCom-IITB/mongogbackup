@@ -155,7 +155,7 @@ dmypy.json
 cython_debug/
 
 # oauth2 credentials
-creds.json
+credentials.json
 
 backup.zip
 
