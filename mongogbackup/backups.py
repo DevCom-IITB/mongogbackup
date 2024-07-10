@@ -1,4 +1,6 @@
 import subprocess, os, sys
+from pymongo import MongoClient
+from pymongo.errors import OperationFailure, ConnectionFailure
 
 class MongoCommandUnavailableError(Exception):
     """Raised when the required MongoDB command is not available."""
@@ -7,6 +9,31 @@ class MongoCommandUnavailableError(Exception):
     def __str__(self):
         return f"Command {self.command} not found. Please install MongoDB Database Tools on your system and add them to your PATH."
     
+class MongoAdminError(Exception):
+    def __init__(self,error_code:int):
+        self.error_code=error_code
+        
+    def __str__(self):
+        if self.error_code == 1:
+            return "Error: User authentication is required. Please provide username, password and authentication database."
+        elif self.error_code == 2:
+            return "Error: Invalid username or password. Please check the provided credentials."
+
+class MongoConnectionError(Exception):
+    def __str__(self):
+        return "Error: Unable to connect to the specified MongoDB database. Please check host,port and database name"
+
+class DirectoryNotFoundError(Exception):
+    def __init__(self, dir:str):
+        self.dir=dir
+    def __str__(self):
+        return f"Error: The specified directory {self.dir} does not exist."
+    
+class UnexpectedError(Exception):
+    def __init__(self, error:str):
+        self.error=error
+    def __str__(self):
+        return f"An unexpected error occured. Refer to: {self.error}"
 
 class MongoBackupHandler:
     """Handles backup and restore operations for MongoDB databases."""
@@ -18,7 +45,7 @@ class MongoBackupHandler:
         port:int=27017,
         username:str=None,
         password:str=None, 
-        auth_db:str=None
+        auth_db:str='Admin'
         ):
         """Initializes the MongoBackupHandler object with database details and 
         checks if mongodump and mongorestore are installed and added to PATH.
@@ -44,6 +71,8 @@ class MongoBackupHandler:
         self.username=username
         self.password=password
         self.auth_db=auth_db
+        
+        self.check_connection()
     
     def check_mongodump(self) -> bool:
         """Check mongodump command availability"""
@@ -59,13 +88,47 @@ class MongoBackupHandler:
         result= subprocess.run(command, capture_output=True, text=True)
         if result.returncode != 0:  
             return False
+        return True  
+
+    def check_connection(self) -> None:
+        """Checks if the connection to the database is succesful or not. Also checks if the password provided is correct or not."""
+        if self.username and self.password == None:
+            try:
+                client= MongoClient(host=self.host,port=self.port)
+                client.admin.command('listDatabases')
+
+            except ConnectionFailure:
+                raise MongoConnectionError()
+            except OperationFailure:
+                raise MongoAdminError(1)
+            finally:
+                client.close()
+        else:
+            try:
+                client= MongoClient(host=self.host, port=self.port,
+                                    username=self.username,
+                                    password=self.password,
+                                    authSource=self.auth_db)
+                client.admin.command('listDatabases')
+            except OperationFailure:
+                raise MongoAdminError(2)
+            finally:
+                client.close()
+    
+    def check_directory(self, dir:str) -> bool:
+        """Checks if the specified directory exists or not."""
+        if not os.path.exists(dir):
+            return False
         return True
-        
-    def backup(self, dir:str) -> bool:
+
+    def backup(self, dir:str) -> None:
         """Executes mongodump and saves backup files to the specified directory(dir)."""
-        formatted_dir = dir.replace("\\", "/")
-        os.makedirs(formatted_dir, exist_ok=True)
         
+        formatted_dir = dir.replace("\\", "/")
+        check_dir= self.check_directory(formatted_dir)
+        if not check_dir:
+            raise DirectoryNotFoundError(dir)
+
         command = [
             'mongodump', 
             '--host', self.host, 
@@ -74,7 +137,7 @@ class MongoBackupHandler:
             '--out', formatted_dir
             ]
 
-        if self.username and self.password and self.auth_db:
+        if self.username and self.password :
             command.extend([
                 '--username', self.username, 
                 '--password', self.password, 
@@ -85,18 +148,18 @@ class MongoBackupHandler:
         result=subprocess.run(command, capture_output=True,text=True)
         if result.returncode == 0:
             print(f"Backup successful; added to: {formatted_dir}")
-            return True
-        print(f"Backup failed with error: {result.stderr}")
-        return False
+            return
+        raise UnexpectedError(result.stderr)
+        
 
-    def restore(self,bck_dir:str) -> bool:
+    def restore(self,bck_dir:str) -> None:
         """Executes mongorestore and loads backupfiles from the specified directory(bck_dir)."""
         
         formatted_bck_dir = bck_dir.replace("\\", "/")
+        check_dir= self.check_directory(formatted_bck_dir)
+        if not check_dir:
+            raise DirectoryNotFoundError(dir)
         
-        if not os.path.exists(formatted_bck_dir):
-            print(f"Error: The specified directory {bck_dir} does not exist.")
-
         command= [
             'mongorestore', 
             '--host', self.host, 
@@ -105,7 +168,7 @@ class MongoBackupHandler:
             formatted_bck_dir
             ]
         
-        if self.username and self.password and self.auth_db:
+        if self.username and self.password:
             command.extend([
                 '--username', self.username, 
                 '--password', self.password, 
@@ -117,6 +180,5 @@ class MongoBackupHandler:
         
         if result.returncode == 0:
             print(f"Restore succesful; restored from: {bck_dir}")
-            return True
-        print(f"Restore failed with error: {result.stderr}")
-        return False
+            return 
+        raise UnexpectedError(result.stderr)
