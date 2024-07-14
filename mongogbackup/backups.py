@@ -18,6 +18,8 @@ class MongoAdminError(Exception):
             return "Error: User authentication is required. Please provide username, password and authentication database."
         elif self.error_code == 2:
             return "Error: Invalid username or password. Please check the provided credentials."
+        elif self.error_code == 3:
+            return "Error: Password is required when username is provided. Please provide a password."
 
 class MongoConnectionError(Exception):
     def __str__(self):
@@ -92,17 +94,20 @@ class MongoBackupHandler:
 
     def check_connection(self) -> None:
         """Checks if the connection to the database is succesful or not. Also checks if the password provided is correct or not."""
-        if self.username and self.password == None:
+        if self.username is not None and self.password is None:
+            raise MongoAdminError(3)
+        
+        if self.username is None and self.password is None:
             try:
-                client= MongoClient(host=self.host,port=self.port)
-                client.admin.command('listDatabases')
-
+                client = MongoClient(host=self.host, port=self.port)
+                list = client.admin.command('listDatabases')
             except ConnectionFailure:
                 raise MongoConnectionError()
             except OperationFailure:
                 raise MongoAdminError(1)
             finally:
                 client.close()
+        
         else:
             try:
                 client= MongoClient(host=self.host, port=self.port,
@@ -110,11 +115,13 @@ class MongoBackupHandler:
                                     password=self.password,
                                     authSource=self.auth_db)
                 client.admin.command('listDatabases')
+            except ConnectionFailure:
+                raise MongoConnectionError()
             except OperationFailure:
                 raise MongoAdminError(2)
             finally:
                 client.close()
-    
+
     def check_directory(self, dir:str) -> bool:
         """Checks if the specified directory exists or not."""
         if not os.path.exists(dir):
@@ -182,3 +189,4 @@ class MongoBackupHandler:
             print(f"Restore succesful; restored from: {bck_dir}")
             return 
         raise UnexpectedError(result.stderr)
+    
