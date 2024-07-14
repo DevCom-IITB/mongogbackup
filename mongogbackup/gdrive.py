@@ -67,7 +67,9 @@ class InternetConnectivityError(Exception):
 
 
 class GoogleDriveHandler:
-    def __init__(self, credentials_file: str) -> None:
+    def __init__(self, credentials_file: str, parent_id: str, file_name: str) -> None:
+        self.parent_id = parent_id
+        self.file_name = file_name
         if self.check_internet_connectivity() == False:
             raise InternetConnectivityError()
         try:
@@ -182,8 +184,8 @@ class GoogleDriveHandler:
 
 if __name__ == "__main__":
     credentials_file = 'mongogbackup/credentials.json'
-    parent_id = 'XXXXXX'  # Replace with your desired target folder ID
-    gdrive = GoogleDriveHandler(credentials_file)
+    parent_id = '1kIvfXUgB7QnXfhoaueMKJjsYCLGr1zUU'  # Replace with your desired target folder ID
+    gdrive = GoogleDriveHandler(credentials_file, parent_id, 'mongogbackup/backup.zip')
     num_files = 3
     gdrive.overwrite_and_upload_to_drive('mongogbackup/backup.zip', parent_id) #if you want to overwrite previously uploaded backup files
     # gdrive.upload_to_drive_with_rfh('mongogbackup/backup.zip', parent_id, num_files) #if you want to keep only n newest files in the target folder
