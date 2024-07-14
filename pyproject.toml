@@ -1,9 +1,10 @@
 [build-system]
-requires = 
-build-backend = 
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 
 [project]
-name = "mongogbackup",
+name = "mongogbackup"
 version = "0.1.0"
 dependencies = [
     "google-auth >= 2.31.0",
@@ -14,7 +15,7 @@ dependencies = [
     "pymongo >= 4.8.0",
     "cryptography >= 42.0.8"
 ]
-requires-python = ">=3.0"
+requires-python = ">=3.8"
 authors = [
     {name = "DevCom, IIT Bombay", email = "devcom@iitb.ac.in"}
 ]
@@ -24,7 +25,7 @@ maintainers = [
 description = "Securely Backup MongoDB to Google Drive"
 readme = "README.md"
 license = {file="LICENSE"}
-keywords = ["mongodb", "backup", "google drive", "remote"]
+keywords = ["mongodb", "backup", "google", "drive", "remote", "gdrive", "mongogb", "mongogbackup", "mongo"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -32,3 +33,6 @@ classifiers = [
     "Programming Language :: Python",
 ]
 
+[project.urls]
+Repository = "https://github.com/DevCom-IITB/mongogbackup"
+Issues = "https://github.com/DevCom-IITB/mongogbackup/issues"
