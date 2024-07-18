@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>mongogbackup.gdrive API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mongogbackup.gdrive</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="mongogbackup.gdrive.FileDeletionError"><code class="flex name class">
+<span>class <span class="ident">FileDeletionError</span></span>
+<span>(</span><span>file_name: str, file_id: str, message: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when there is an error during file deletion.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FileDeletionError(Exception):
+    &#34;&#34;&#34;Raised when there is an error during file deletion.&#34;&#34;&#34;
+    def __init__(self, file_name: str, file_id: str, message: str):
+        self.file_name = file_name
+        self.file_id = file_id
+        self.message = message
+    def __str__(self):
+        return f&#34;Error deleting file {self.file_name} (ID: {self.file_id}): {self.message}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="mongogbackup.gdrive.FileQueryError"><code class="flex name class">
+<span>class <span class="ident">FileQueryError</span></span>
+<span>(</span><span>message: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when there is an error querying files on Google Drive.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FileQueryError(Exception):
+    &#34;&#34;&#34;Raised when there is an error querying files on Google Drive.&#34;&#34;&#34;
+    def __init__(self, message: str):
+        self.message = message
+    def __str__(self):
+        return f&#34;File query error: {self.message}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="mongogbackup.gdrive.FileUploadError"><code class="flex name class">
+<span>class <span class="ident">FileUploadError</span></span>
+<span>(</span><span>file_name: str, message: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when there is an error during file upload.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FileUploadError(Exception):
+    &#34;&#34;&#34;Raised when there is an error during file upload.&#34;&#34;&#34;
+    def __init__(self, file_name: str, message: str):
+        self.file_name = file_name
+        self.message = message
+    def __str__(self):
+        return f&#34;Error deleting file {self.file_name}: {self.message}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="mongogbackup.gdrive.GoogleDriveAPIError"><code class="flex name class">
+<span>class <span class="ident">GoogleDriveAPIError</span></span>
+<span>(</span><span>message: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when there is an error connecting to Google Drive API.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GoogleDriveAPIError(Exception):
+    &#34;&#34;&#34;Raised when there is an error connecting to Google Drive API.&#34;&#34;&#34;
+    def __init__(self, message: str):
+        self.message = message
+    def __str__(self):
+        return f&#34;Google Drive API error: {self.message}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="mongogbackup.gdrive.GoogleDriveHandler"><code class="flex name class">
+<span>class <span class="ident">GoogleDriveHandler</span></span>
+<span>(</span><span>credentials_file: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GoogleDriveHandler:
+    def __init__(self, credentials_file: str) -&gt; None:
+        if self.check_internet_connectivity() == False:
+            raise InternetConnectivityError()
+        try:
+            self.credentials = service_account.Credentials.from_service_account_file(credentials_file, scopes=[&#39;https://www.googleapis.com/auth/drive&#39;])
+            self.drive_service = build(&#39;drive&#39;, &#39;v3&#39;, credentials=self.credentials)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            raise LoadCredentialsError(str(e))
+        except (IOError, ValueError) as e:
+            raise InvalidCredentialsError(str(e))
+        except HttpError as e:
+            raise GoogleDriveAPIError(str(e))
+        
+    def check_internet_connectivity(self) -&gt; bool:
+        &#34;&#34;&#34;Checks if there is an active internet connection.&#34;&#34;&#34;
+        try:
+            requests.get(&#39;https://www.google.com&#39;, timeout=5)
+            return True
+        except requests.ConnectionError:
+            return False
+            
+    def find_existing_files(self, file_name: str, parent_id: str) -&gt; Optional[List[Dict[str, str]]]:
+        &#34;&#34;&#34;Finds all existing files with the same name in the target folder&#34;&#34;&#34;
+        try: 
+            query = f&#34;name=&#39;{file_name}&#39; and &#39;{parent_id}&#39; in parents and trashed=false&#34;
+            response = self.drive_service.files().list(q=query, fields=&#39;files(id, name)&#39;).execute()
+            files = response.get(&#39;files&#39;, [])
+            print(f&#39;Existing files: {files}&#39;)
+            return files if files else None
+        except HttpError as e:
+            if e.resp.status in [403, 404]:
+                raise InvalidParentIDError(parent_id)
+            raise FileQueryError(str(e))
+
+    def delete_files(self, files: List[dict]) -&gt; None:
+        &#34;&#34;&#34;Deletes files from Google Drive&#34;&#34;&#34;
+        for file in files:
+            try:
+                self.drive_service.files().delete(fileId=file[&#39;id&#39;]).execute()
+                print(f&#34;Deleted file: {file[&#39;name&#39;]} (ID: {file[&#39;id&#39;]})&#34;)
+            except HttpError as e:
+                FileDeletionError(file[&#39;name&#39;], file[&#39;id&#39;], str(e))
+    
+    def delete_older_files(self, parent_id: str, num_files: int) -&gt; None:
+        &#34;&#34;&#34;Deletes older files if there are more than 3 files in the target folder&#34;&#34;&#34;
+        try:
+            query = f&#34;&#39;{parent_id}&#39; in parents and trashed=false&#34;
+            response = self.drive_service.files().list(q=query, fields=&#39;files(id, name)&#39;, orderBy=&#39;createdTime asc&#39;).execute()
+            files = response.get(&#39;files&#39;, [])
+            if len(files) &gt; num_files:
+                for file in files[0:len(files)-num_files]:
+                    try:
+                        self.drive_service.files().delete(fileId=file[&#39;id&#39;]).execute()
+                        print(f&#34;Deleted file: {file[&#39;name&#39;]}&#34;)
+                    except HttpError as e:
+                        FileDeletionError(file[&#39;name&#39;], file[&#39;id&#39;], str(e))
+        except HttpError as e:
+            if e.resp.status in [403, 404]:
+                raise InvalidParentIDError(parent_id)
+            raise FileQueryError(str(e))
+
+    def upload_file_to_drive(self, file_name: str, parent_id: str) -&gt; dict:
+        &#34;&#34;&#34;Uploads a file to Google Drive&#34;&#34;&#34;
+        media = MediaFileUpload(file_name, mimetype=&#39;application/gzip&#39;, resumable=True)
+        file_metadata = {
+            &#39;name&#39;: file_name,
+            &#39;parents&#39;: [parent_id]
+        }
+        
+        try:
+            request = self.drive_service.files().create(
+                body=file_metadata,
+                media_body=media,
+                fields=&#39;id&#39;
+            )
+            response = None
+            while response is None:
+                status, response = request.next_chunk()
+                if status:
+                    print(f&#34;Uploaded {int(status.progress() * 100)}%&#34;)
+            print(f&#34;File uploaded successfully! File Id: {response.get(&#39;id&#39;)}&#34;)
+            return response
+        except HttpError as e:
+            if e.resp.status in [403, 404]:
+                raise InvalidParentIDError(parent_id)
+            FileUploadError(file_name, str(e))
+            raise e
+    
+    # this implementation overwrites any previous files with the same name in the target folder, essentially keeping only the latest file
+    def overwrite_and_upload_to_drive(self, file_name: str, parent_id: str) -&gt; None:
+        &#34;&#34;&#34;Uploads a file to Google Drive and deletes any previous files with the same name in the target folder&#34;&#34;&#34;
+        existing_files = self.find_existing_files(file_name, parent_id)
+
+        try:
+            response = self.upload_file_to_drive(file_name, parent_id)
+            if existing_files:
+                self.delete_files(existing_files)
+
+        except (FileUploadError, FileDeletionError, FileQueryError) as e:
+            print(f&#39;Unable to overwrite and upload file, error: {e}&#39;)
+
+    # this implementation keeps the &#39;num_files&#39; newest files at any point in time in the target folder
+    def upload_to_drive_with_rfh(self, file_name: str, parent_id: str, num_files: int) -&gt; None:
+        &#34;&#34;&#34;Uploads a file to Google Drive and deletes older files if there are more than 3 files in the target folder&#34;&#34;&#34;
+        try:
+            response = self.upload_file_to_drive(file_name, parent_id)
+            self.delete_older_files(parent_id, num_files) 
+
+        except (FileUploadError, FileDeletionError, FileQueryError) as e:
+            print(f&#39;Unable to upload file with RFH, error: {e}&#39;)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="mongogbackup.gdrive.GoogleDriveHandler.check_internet_connectivity"><code class="name flex">
+<span>def <span class="ident">check_internet_connectivity</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if there is an active internet connection.</p></div>
+</dd>
+<dt id="mongogbackup.gdrive.GoogleDriveHandler.delete_files"><code class="name flex">
+<span>def <span class="ident">delete_files</span></span>(<span>self, files: List[dict]) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Deletes files from Google Drive</p></div>
+</dd>
+<dt id="mongogbackup.gdrive.GoogleDriveHandler.delete_older_files"><code class="name flex">
+<span>def <span class="ident">delete_older_files</span></span>(<span>self, parent_id: str, num_files: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Deletes older files if there are more than 3 files in the target folder</p></div>
+</dd>
+<dt id="mongogbackup.gdrive.GoogleDriveHandler.find_existing_files"><code class="name flex">
+<span>def <span class="ident">find_existing_files</span></span>(<span>self, file_name: str, parent_id: str) ‑> Optional[List[Dict[str, str]]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Finds all existing files with the same name in the target folder</p></div>
+</dd>
+<dt id="mongogbackup.gdrive.GoogleDriveHandler.overwrite_and_upload_to_drive"><code class="name flex">
+<span>def <span class="ident">overwrite_and_upload_to_drive</span></span>(<span>self, file_name: str, parent_id: str) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Uploads a file to Google Drive and deletes any previous files with the same name in the target folder</p></div>
+</dd>
+<dt id="mongogbackup.gdrive.GoogleDriveHandler.upload_file_to_drive"><code class="name flex">
+<span>def <span class="ident">upload_file_to_drive</span></span>(<span>self, file_name: str, parent_id: str) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Uploads a file to Google Drive</p></div>
+</dd>
+<dt id="mongogbackup.gdrive.GoogleDriveHandler.upload_to_drive_with_rfh"><code class="name flex">
+<span>def <span class="ident">upload_to_drive_with_rfh</span></span>(<span>self, file_name: str, parent_id: str, num_files: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Uploads a file to Google Drive and deletes older files if there are more than 3 files in the target folder</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="mongogbackup.gdrive.InternetConnectivityError"><code class="flex name class">
+<span>class <span class="ident">InternetConnectivityError</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when there is no active internet connection.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InternetConnectivityError(Exception):
+    &#34;&#34;&#34;Raised when there is no active internet connection.&#34;&#34;&#34;
+    def __init__(self):
+        pass
+    def __str__(self):
+        return &#34;No internet connection&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="mongogbackup.gdrive.InvalidCredentialsError"><code class="flex name class">
+<span>class <span class="ident">InvalidCredentialsError</span></span>
+<span>(</span><span>message: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when credentials are invalid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InvalidCredentialsError(Exception):
+    &#34;&#34;&#34;Raised when credentials are invalid&#34;&#34;&#34;
+    def __init__(self, message: str):
+        self.message = message
+    def __str__(self):
+        return f&#34;Invalid credentials: {self.message}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="mongogbackup.gdrive.InvalidParentIDError"><code class="flex name class">
+<span>class <span class="ident">InvalidParentIDError</span></span>
+<span>(</span><span>parent_id: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when the parent ID is invalid or does not exist.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InvalidParentIDError(Exception):
+    &#34;&#34;&#34;Raised when the parent ID is invalid or does not exist.&#34;&#34;&#34;
+    def __init__(self, parent_id: str):
+        self.parent_id = parent_id
+    def __str__(self):
+        return f&#34;Invalid parent ID: {self.parent_id}. The folder may not exist or the ID is incorrect.&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="mongogbackup.gdrive.LoadCredentialsError"><code class="flex name class">
+<span>class <span class="ident">LoadCredentialsError</span></span>
+<span>(</span><span>message: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when there is an error loading credentials from file.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LoadCredentialsError(Exception):
+    &#34;&#34;&#34;Raised when there is an error loading credentials from file.&#34;&#34;&#34;
+    def __init__(self, message: str):
+        self.message = message
+    def __str__(self):
+        return f&#34;Error in reading the credentials file: {self.message}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mongogbackup" href="index.html">mongogbackup</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="mongogbackup.gdrive.FileDeletionError" href="#mongogbackup.gdrive.FileDeletionError">FileDeletionError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mongogbackup.gdrive.FileQueryError" href="#mongogbackup.gdrive.FileQueryError">FileQueryError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mongogbackup.gdrive.FileUploadError" href="#mongogbackup.gdrive.FileUploadError">FileUploadError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mongogbackup.gdrive.GoogleDriveAPIError" href="#mongogbackup.gdrive.GoogleDriveAPIError">GoogleDriveAPIError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mongogbackup.gdrive.GoogleDriveHandler" href="#mongogbackup.gdrive.GoogleDriveHandler">GoogleDriveHandler</a></code></h4>
+<ul class="">
+<li><code><a title="mongogbackup.gdrive.GoogleDriveHandler.check_internet_connectivity" href="#mongogbackup.gdrive.GoogleDriveHandler.check_internet_connectivity">check_internet_connectivity</a></code></li>
+<li><code><a title="mongogbackup.gdrive.GoogleDriveHandler.delete_files" href="#mongogbackup.gdrive.GoogleDriveHandler.delete_files">delete_files</a></code></li>
+<li><code><a title="mongogbackup.gdrive.GoogleDriveHandler.delete_older_files" href="#mongogbackup.gdrive.GoogleDriveHandler.delete_older_files">delete_older_files</a></code></li>
+<li><code><a title="mongogbackup.gdrive.GoogleDriveHandler.find_existing_files" href="#mongogbackup.gdrive.GoogleDriveHandler.find_existing_files">find_existing_files</a></code></li>
+<li><code><a title="mongogbackup.gdrive.GoogleDriveHandler.overwrite_and_upload_to_drive" href="#mongogbackup.gdrive.GoogleDriveHandler.overwrite_and_upload_to_drive">overwrite_and_upload_to_drive</a></code></li>
+<li><code><a title="mongogbackup.gdrive.GoogleDriveHandler.upload_file_to_drive" href="#mongogbackup.gdrive.GoogleDriveHandler.upload_file_to_drive">upload_file_to_drive</a></code></li>
+<li><code><a title="mongogbackup.gdrive.GoogleDriveHandler.upload_to_drive_with_rfh" href="#mongogbackup.gdrive.GoogleDriveHandler.upload_to_drive_with_rfh">upload_to_drive_with_rfh</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="mongogbackup.gdrive.InternetConnectivityError" href="#mongogbackup.gdrive.InternetConnectivityError">InternetConnectivityError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mongogbackup.gdrive.InvalidCredentialsError" href="#mongogbackup.gdrive.InvalidCredentialsError">InvalidCredentialsError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mongogbackup.gdrive.InvalidParentIDError" href="#mongogbackup.gdrive.InvalidParentIDError">InvalidParentIDError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mongogbackup.gdrive.LoadCredentialsError" href="#mongogbackup.gdrive.LoadCredentialsError">LoadCredentialsError</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>

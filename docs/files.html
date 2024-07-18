@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>mongogbackup.files API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mongogbackup.files</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="mongogbackup.files.FileEncryptor"><code class="flex name class">
+<span>class <span class="ident">FileEncryptor</span></span>
+<span>(</span><span>generate_key=False, key: str = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Encrypts and decrypts files using Fernet symmetric encryption.</p>
+<p>Initializes the Encryptor class.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FileEncryptor:
+    &#34;&#34;&#34;Encrypts and decrypts files using Fernet symmetric encryption.&#34;&#34;&#34;
+    
+    def __init__(self, generate_key=False, key:str = None):
+        &#34;&#34;&#34;Initializes the Encryptor class.&#34;&#34;&#34;
+        
+        if(not generate_key and key is None):
+            raise ValueError(&#34;Either provide a key or generate_key must be set to True.&#34;)
+        
+        self._FERNET_KEY = Fernet.generate_key() if generate_key  else key
+    
+    def get_key(self) -&gt;str:
+        &#34;&#34;&#34;Returns the encryption key.&#34;&#34;&#34;
+        return self._FERNET_KEY
+    
+    def encrypt_file(self, source_file_path:str, encrypted_file_path:str) -&gt; str:
+        &#34;&#34;&#34;Encrypts a file using Fernet symmetric encryption.&#34;&#34;&#34;
+       
+        # Create a Fernet Instance
+        key = self._FERNET_KEY 
+        f = Fernet(key)
+        
+        # Encrypt the file
+        with open(source_file_path, &#39;rb&#39;) as file:
+            data = file.read()
+        encrypted = f.encrypt(data)
+        
+        # Write the encrypted file
+        with open(encrypted_file_path, &#39;wb&#39;) as file:
+            file.write(encrypted)
+        
+        return encrypted_file_path
+        
+    def decrypt_file(self, encrypted_file_path, decrypted_file_path) -&gt; str:
+        &#34;&#34;&#34;Decrypts a file using Fernet symmetric encryption.&#34;&#34;&#34;
+        
+        # Create a Fernet Instance
+        key = self._FERNET_KEY
+        fernet = Fernet(key)
+        
+        # Decrypt the file
+        with open(encrypted_file_path, &#39;rb&#39;) as enc_file:
+            encrypted = enc_file.read()
+        decrypted = fernet.decrypt(encrypted)
+        
+        # Write the decrypted file
+        with open(decrypted_file_path, &#39;wb&#39;) as dec_file:
+            dec_file.write(decrypted)
+        return decrypted_file_path</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="mongogbackup.files.FileEncryptor.decrypt_file"><code class="name flex">
+<span>def <span class="ident">decrypt_file</span></span>(<span>self, encrypted_file_path, decrypted_file_path) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Decrypts a file using Fernet symmetric encryption.</p></div>
+</dd>
+<dt id="mongogbackup.files.FileEncryptor.encrypt_file"><code class="name flex">
+<span>def <span class="ident">encrypt_file</span></span>(<span>self, source_file_path: str, encrypted_file_path: str) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Encrypts a file using Fernet symmetric encryption.</p></div>
+</dd>
+<dt id="mongogbackup.files.FileEncryptor.get_key"><code class="name flex">
+<span>def <span class="ident">get_key</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the encryption key.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="mongogbackup.files.HashVerifier"><code class="flex name class">
+<span>class <span class="ident">HashVerifier</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates and verifies sha-256 checksums for files.</p>
+<p>Initializes the HashVerifier class.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HashVerifier:
+    &#34;&#34;&#34;Generates and verifies sha-256 checksums for files.&#34;&#34;&#34;
+        
+    def __init__(self):
+        &#34;&#34;&#34;Initializes the HashVerifier class.&#34;&#34;&#34;
+        self._BUF_SIZE: int = 65336 # 64Kb
+        self._last_hash: str = None
+        self._last_hash_time:datetime.datetime = None
+        
+    def __str__(self) -&gt; str:
+        return self._last_hash
+    
+    def last_hash(self) -&gt; dict:
+        &#34;&#34;&#34;Last generated hash and the generation time.
+        
+        Returns:
+            dict -- A dictionary containing the hash and the time it was generated
+            {&#34;hash&#34;:str, &#34;time&#34;:datetime.datetime}.
+            &#34;&#34;&#34;
+        return {&#34;hash&#34;: self._last_hash, &#34;time&#34;: self._last_hash_time}
+    
+    def settings(self, buf_size: int = None) -&gt; None:
+        &#34;&#34;&#34;Settings for the HashVerifier class.
+
+        Keword Arguments:
+            buf_size -- The buffer size to use when reading the file. Default is 64Kb.
+        &#34;&#34;&#34;
+        self._BUF_SIZE = buf_size if buf_size is not None else self._BUF_SIZE
+
+    def generate_file_hash(self, file_path: str) -&gt; str:
+        &#34;&#34;&#34;Generates and caches SHA-256 checksum for a file.&#34;&#34;&#34;
+        sha = sha256()
+        with open(file_path, &#39;rb&#39;) as f:
+            while True:
+                data = f.read(self._BUF_SIZE)
+                if not data:
+                    break
+                sha.update(data)
+        self._last_hash = sha.hexdigest()
+        self._last_hash_time = datetime.datetime.now()
+        return self._last_hash
+    
+    def compare_generated(self, hash: str) -&gt; bool:
+        &#34;&#34;&#34;Compares input hash with the last generated hash.&#34;&#34;&#34;
+        return hash == self._last_hash
+    
+    def save(self, file_name: str = &#34;hash.txt&#34;):
+        &#34;&#34;&#34;Saves the last generated hash to a file.&#34;&#34;&#34;
+        file_output =[  
+                      &#34;MongoGBackup File Hash\n&#34;,
+                      &#34;--------------------------------------\n&#34;,
+                      &#34;SHA256 Checksum: &#34; + self._last_hash+&#34;\n&#34;,
+                      &#34;Generated at: &#34; + str(self._last_hash_time)+&#34; (local)&#34;,
+                      ]
+        with open(file_name, &#39;w&#39;) as f:
+            f.writelines(file_output)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="mongogbackup.files.HashVerifier.compare_generated"><code class="name flex">
+<span>def <span class="ident">compare_generated</span></span>(<span>self, hash: str) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compares input hash with the last generated hash.</p></div>
+</dd>
+<dt id="mongogbackup.files.HashVerifier.generate_file_hash"><code class="name flex">
+<span>def <span class="ident">generate_file_hash</span></span>(<span>self, file_path: str) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates and caches SHA-256 checksum for a file.</p></div>
+</dd>
+<dt id="mongogbackup.files.HashVerifier.last_hash"><code class="name flex">
+<span>def <span class="ident">last_hash</span></span>(<span>self) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Last generated hash and the generation time.</p>
+<h2 id="returns">Returns</h2>
+<p>dict &ndash; A dictionary containing the hash and the time it was generated
+{"hash":str, "time":datetime.datetime}.</p></div>
+</dd>
+<dt id="mongogbackup.files.HashVerifier.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, file_name: str = 'hash.txt')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves the last generated hash to a file.</p></div>
+</dd>
+<dt id="mongogbackup.files.HashVerifier.settings"><code class="name flex">
+<span>def <span class="ident">settings</span></span>(<span>self, buf_size: int = None) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Settings for the HashVerifier class.</p>
+<p>Keword Arguments:
+buf_size &ndash; The buffer size to use when reading the file. Default is 64Kb.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mongogbackup" href="index.html">mongogbackup</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="mongogbackup.files.FileEncryptor" href="#mongogbackup.files.FileEncryptor">FileEncryptor</a></code></h4>
+<ul class="">
+<li><code><a title="mongogbackup.files.FileEncryptor.decrypt_file" href="#mongogbackup.files.FileEncryptor.decrypt_file">decrypt_file</a></code></li>
+<li><code><a title="mongogbackup.files.FileEncryptor.encrypt_file" href="#mongogbackup.files.FileEncryptor.encrypt_file">encrypt_file</a></code></li>
+<li><code><a title="mongogbackup.files.FileEncryptor.get_key" href="#mongogbackup.files.FileEncryptor.get_key">get_key</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="mongogbackup.files.HashVerifier" href="#mongogbackup.files.HashVerifier">HashVerifier</a></code></h4>
+<ul class="">
+<li><code><a title="mongogbackup.files.HashVerifier.compare_generated" href="#mongogbackup.files.HashVerifier.compare_generated">compare_generated</a></code></li>
+<li><code><a title="mongogbackup.files.HashVerifier.generate_file_hash" href="#mongogbackup.files.HashVerifier.generate_file_hash">generate_file_hash</a></code></li>
+<li><code><a title="mongogbackup.files.HashVerifier.last_hash" href="#mongogbackup.files.HashVerifier.last_hash">last_hash</a></code></li>
+<li><code><a title="mongogbackup.files.HashVerifier.save" href="#mongogbackup.files.HashVerifier.save">save</a></code></li>
+<li><code><a title="mongogbackup.files.HashVerifier.settings" href="#mongogbackup.files.HashVerifier.settings">settings</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>
