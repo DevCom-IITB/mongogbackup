@@ -28,6 +28,12 @@ backup_handler =MongoGBackup(
                             credentials_file='path/credentials.json',  
                             key='fernet_key'
                         )
+gdrive = GoogleDriveHandler(
+                             credentials_file='path/credentials.json',
+                             parent_id = target_folder_id,
+                             file_name = name_of_the_file_you_want_to_upload,
+                             num_files = how_many_files_you_want_to_keep_in_the_rotating_file_handler               
+)
 ```
 ## Creating dump
 ```python
@@ -42,8 +48,18 @@ backup_handler.targz.pack(source_path='backup_path/dump/', output_path='filename
 backup_handler.encrypt.encrypt_file('filename.tar.gz', 'destination.file')
 ```
 ### Uploading to Google Drive
+Add your credentials.json file to your project (you can generate this on Google Cloud Console)
+## Simple upload to google drive
 ```python
-# To-Do: write upload instructions
+gdrive.upload_file_to_drive(file_name, parent_id)
+```
+## Delete all previous files with same name and upload to Google Drive
+```python
+gdrive.overwrite_and_upload_to_drive(file_name, parent_id)
+```
+## Upload to Google Drive with a rotating file handler
+```python
+gdrive.upload_to_drive_with_rfh(file_name, parent_id, num_files)
 ```
 
 ## Restore Backups
