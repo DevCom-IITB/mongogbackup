@@ -67,7 +67,7 @@ Download the backup file from google drive (say: backup.encr)
 
 ### Decrypt the file
 ```python
-backup_handler.encrypt.encrypt_file('backup.encr', 'filename.tar.gz')
+backup_handler.encrypt.decrypt_file('backup.encr', 'filename.tar.gz')
 ```
 ### Decompressing the tar-gz dump
 ```python
