@@ -15,7 +15,7 @@ class MongoConfig:
 
 class MongoGBackup:
     """Main class for handling MongoDB backups on Google Drive"""
-    def __init__(self, mongoConfig:MongoConfig, credentials_file:str, key:str) -> None:
+    def __init__(self, mongoConfig:MongoConfig, credentials_file:str, parent_id:str, file_name:str, key:str) -> None:
         self. backups = backups.MongoBackupHandler(
             db_name=mongoConfig.db_name,
             host=mongoConfig.host,
@@ -24,7 +24,7 @@ class MongoGBackup:
             password=mongoConfig.password,
             auth_db=mongoConfig.auth_db
         )
-        self.gdrive = gdrive.GoogleDriveHandler(credentials_file)
+        self.gdrive = gdrive.GoogleDriveHandler(credentials_file, parent_id, file_name)
         self.hash = files.HashVerifier()
         self.encrypt = files.FileEncryptor(generate_key=False, key=key)
         self.targz = targz

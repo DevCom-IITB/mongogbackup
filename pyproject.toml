@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mongogbackup"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
     "google-auth >= 2.31.0",
     "google-auth-oauthlib >= 1.2.0",
